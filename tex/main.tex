@@ -1,0 +1,72 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper, margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage[pdf]{graphviz}
+\usepackage{enumitem}
+%\usepackage{parskip}
+\newcommand{\ra}{\rightarrow} 
+
+\begin{document}
+
+We are given two rays, defined by a total of four vectors:
+\[ \vec{A}(t) = \vec{P} + t \vec{R} \]
+\[ \vec{B}(k) = \vec{G} + k \vec{D} \]
+
+Where $\vec{R}$ and $\vec{D}$ are the directions of the rays and $\vec{P}$ and $\vec{G}$ are their origins respectively.
+
+We want to find the closest approach between these vectors, so first we'll define that "close" means the smallest euclidean distance between the two vectors:
+
+\[ f(t, k) = \sqrt{\left(\vec{A}(t) - \vec{B}(k)\right)^2} \]
+
+Because $sqrt(x)$ is nondecreasing, we can leave it off to simplify our calculations:
+\[ L(t, k) = \left(\vec{A}(t) - \vec{B}(k)\right)^2 \]
+
+In summary, we want to find:
+\[ \arg \min_{t, k} L(t, k) \]
+
+For simplification, we will group our origins $P$ and $G$ into one factor:
+\[ \vec{J} = \vec{P} - \vec{G} \]
+\[ L(t, k) 
+    = (\vec{A}(t) - \vec{B}(k))^2 
+    = (\vec{P} + t \vec{R} - \vec{G} - k \vec{D})^2 
+    = (t \vec{R} - k \vec{D} + J)^2
+\]
+
+Next we'll foil this dot product:
+\[
+    = t^2 R^2 - 2tk\vec{R} \cdot \vec{D} + 2t \vec{R} \cdot \vec{J} + k^2 D^2 -2k \vec{D} \cdot \vec{J} + J^2
+\]
+
+Because the closest approach is unique, any variation to $t$ or $k$ at this point will cause an increase in distance. Therefore the gradient at $L(t, k)$ will be zero. So we will begin by taking the partial derivatives of it:
+
+\[ \frac{d}{dt} L(t, k) = 2tR^2 -2k \vec{R} \cdot \vec{D} + 2 \vec{R} \cdot \vec{J} \]
+
+\[ \frac{d}{dk} L(t, k) = 2kD^2 -2t \vec{R} \cdot \vec{D} - 2\vec{D} \cdot \vec{J} \]
+
+Now we set the gradient to zero, from which we obtain the following set of equations:
+\[ 0 = 2tR^2 -2k \vec{R} \cdot \vec{D} + 2 \vec{R} \cdot \vec{J} \]
+\[ 0 = 2kD^2 -2t \vec{R} \cdot \vec{D} - 2\vec{D} \cdot \vec{J} \]
+
+Now, we solve for $t$ and $k$:
+\[ 2tR^2 = 2k \vec{R} \cdot \vec{D} - 2 \vec{R} \cdot \vec{J} \]
+\[ t = \frac{k\vec{R}\cdot\vec{D} -\vec{R}\cdot\vec{J}}{R^2} \]
+
+\[ 0 = 2kD^2 -2 (\vec{R} \cdot \vec{D}) \frac{k\vec{R}\cdot\vec{D} -\vec{R}\cdot\vec{J}}{R^2} - 2\vec{D} \cdot \vec{J} \]
+
+\[ 0 = 2kD^2 -2 (\vec{R} \cdot \vec{D}) \frac{k\vec{R}\cdot\vec{D}}{R^2} + (\vec{R} \cdot \vec{D})\frac{\vec{R}\cdot\vec{J}}{R^2} - 2\vec{D} \cdot \vec{J} \]
+
+\[ 0 = k \left[ 2D^2 -2 (\vec{R} \cdot \vec{D}) \frac{\vec{R}\cdot\vec{D}}{R^2} \right] + 2(\vec{R} \cdot \vec{D})\frac{\vec{R}\cdot\vec{J}}{R^2} - 2\vec{D} \cdot \vec{J} \]
+
+\[ k \left[ 2D^2 -2 (\vec{R} \cdot \vec{D}) \frac{\vec{R}\cdot\vec{D}}{R^2} \right] = -2(\vec{R} \cdot \vec{D})\frac{\vec{R}\cdot\vec{J}}{R^2} + 2\vec{D} \cdot \vec{J} \]
+
+\[ k \left[ 2D^2 -2\frac{(\vec{R} \cdot \vec{D})(\vec{R}\cdot\vec{D})}{R^2} \right] = -\frac{2(\vec{R} \cdot \vec{D})(\vec{R}\cdot\vec{J})}{R^2} + 2\vec{D} \cdot \vec{J} \]
+
+\[ k = \frac{ \frac{2(\vec{R} \cdot \vec{D})(\vec{R}\cdot\vec{J})}{R^2} + 2\vec{D} \cdot \vec{J} } { 2D^2 -2\frac{(\vec{R} \cdot \vec{D})(\vec{R}\cdot\vec{D})}{R^2} } \]
+
+\[ k = \frac{ \vec{D} \cdot \vec{J} - \frac{(\vec{R} \cdot \vec{D})(\vec{R}\cdot\vec{J})}{R^2} } { D^2 -\frac{(\vec{R} \cdot \vec{D})^2}{R^2} } \]
+
+Our desired distance is simply $f(t, k)$!
+
+\end{document}
